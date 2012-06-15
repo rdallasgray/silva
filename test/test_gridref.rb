@@ -1,8 +1,7 @@
 class TestGridref < Test::Unit::TestCase
-  def test_gridref_to_s
+  def test_gridref_no_digits
     Silva::Test::DATA.each do |data|
-      options = { :gridref => data[:gridref], :digits => 8 }
-      l = Silva::Location.from(:gridref, options)
+      l = Silva::Location.from(:en, data[:en]).to(:gridref)
       assert_equal(data[:gridref], l.to_s)
     end
   end

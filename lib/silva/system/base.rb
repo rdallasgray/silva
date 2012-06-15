@@ -30,7 +30,7 @@ module Silva
       #
       def initialize(options)
         @system_name = self.class.name.split('::').last.downcase.to_sym
-        options = DEFAULT_PARAMS.merge(options)
+        options = self.class::DEFAULT_PARAMS.merge(options)
         params_satisfied?(options)
         options.each {|param, val| set_param(param, val) }
       end
@@ -61,7 +61,7 @@ module Silva
       end
 
       def params_satisfied?(options)
-        raise InsufficientParamsError unless REQUIRED_PARAMS & options.keys == REQUIRED_PARAMS
+        raise Silva::InsufficientParamsError unless self.class::REQUIRED_PARAMS & options.keys == self.class::REQUIRED_PARAMS
       end
     end
   end

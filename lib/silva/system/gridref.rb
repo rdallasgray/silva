@@ -28,8 +28,6 @@ module Silva
       # Height of the UK grid
       OSGB_GRID_SCALE = 100000
 
-      attr_reader :gridref
-
       ##
       # Lazily create the gridref from given eastings and northings, or just return it if already set.
       #
@@ -37,14 +35,14 @@ module Silva
       #
       def gridref
         unless @gridref
-          e100k = (@easting / 100000).floor
-          n100k = (@northing / 100000).floor
+          e100k = (easting / 100000).floor
+          n100k = (northing / 100000).floor
           
           index = n100k * OSGB_GRID_WIDTH + e100k
           prefix = OSGB_PREFIXES[index]
           
-          e = ((@easting % OSGB_GRID_SCALE) / (10**(5 - @digits / 2))).round
-          n = ((@northing % OSGB_GRID_SCALE) / (10**(5 - @digits / 2))).round
+          e = ((easting % OSGB_GRID_SCALE) / (10**(5 - @digits / 2))).round
+          n = ((northing % OSGB_GRID_SCALE) / (10**(5 - @digits / 2))).round
           
           @gridref = prefix + e.to_s.rjust(@digits / 2) + n.to_s.rjust(@digits / 2)
         end
@@ -98,7 +96,7 @@ module Silva
       end
 
       def params_satisfied?(options)
-        super or options.include?(:gridref)
+        super unless options.include?(:gridref)
       end
     end
   end

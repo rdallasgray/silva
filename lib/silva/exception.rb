@@ -3,5 +3,5 @@ module Silva
   class InvalidTransformError < StandardError; end
   class InvalidParamError < StandardError; end
   class InvalidParamValueError < StandardError; end
-  class InsufficentParamsError < StandardError; end
+  class InsufficientParamsError < StandardError; end
 end
