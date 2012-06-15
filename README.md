@@ -35,4 +35,4 @@ I began with code written by [Harry Wood](http://www.harrywood.co.uk/blog/2010/0
 
 It should be accurate to about 5 to 10 metres.
 
-Silva was written as part of my (MSc Project)[http://rdallsgray.github.com/archie-blog], of which more later.
+Silva was written as part of my [MSc Project](http://rdallsgray.github.com/archie-blog), of which more later.
