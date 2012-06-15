@@ -6,7 +6,7 @@ module Silva
     class En < Base
       include OsEn
 
-      def inspect
+      def to_s
         [easting, northing].to_s
       end
       

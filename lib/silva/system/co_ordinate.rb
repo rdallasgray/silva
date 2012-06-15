@@ -17,7 +17,7 @@ module Silva
 
       attr_reader :lat, :long, :alt
 
-      def inspect
+      def to_s
         [lat, long, alt].to_s
       end
 

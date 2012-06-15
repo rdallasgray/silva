@@ -52,7 +52,7 @@ module Silva
         @gridref
       end
 
-      def inspect
+      def to_s
         gridref
       end
 
