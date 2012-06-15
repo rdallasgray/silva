@@ -1,5 +1,5 @@
 class TestGridref < Test::Unit::TestCase
-  def test_inspect_gridref
+  def test_gridref_to_s
     Silva::Test::DATA.each do |data|
       options = { :gridref => data[:gridref], :digits => 8 }
       l = Silva::Location.from(:gridref, options)
