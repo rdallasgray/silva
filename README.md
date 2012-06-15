@@ -1,25 +1,27 @@
-What is Silva?
-=============
-A RubyGem which provides utilities to convert between the WGS84 standard for location information (as used by Google Maps, the GPS system, etc.) and the UK Ordnance Survey's OSGB36 datum, easting/northing format and standard grid references.
 
 How do I use it?
 ================
-`gem install silva`
 
-`require 'silva'`
+    gem install silva
+    
+    require 'silva'
+    
+    Silva::Location.from(:wgs84, :lat => 52.658008, :long => 1.716077).to(:gridref)
 
-`Silva::Location.from(:wgs84, :lat => 52.658008, :long => 1.716077).to(:gridref)`
-
-`"TG51411318"`
+    "TG51411318"
 
 What else can it do?
 ===================
 Silva works with four different location systems:
 
-- WGS84 `(:wgs84, :lat => [latitude], :long => [longitude], :alt => [optional altitude])`
-- OSGB36 `(:osgb36, params as above)`
-- EN `(:en, :easting => [easting], :northing => [northing])`
-- GridRef `(:gridref, :gridref => [gridref] OR :easting => [easting], :northing => [northing])`
+- WGS84 
+`(:wgs84, :lat => [latitude], :long => [longitude], :alt => [optional altitude])`
+- OSGB36 
+`(:osgb36, params as above)`
+- EN 
+`(:en, :easting => [easting], :northing => [northing])`
+- GridRef 
+`(:gridref, :gridref => [gridref] OR :easting => [easting], :northing => [northing])`
 
 It can convert freely among each of them using the syntax `Silva::Location.from(:system, params).to(:system, params)`.
 
