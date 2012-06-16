@@ -133,26 +133,24 @@ module Silva
     # Portions of code from:
     # http://www.harrywood.co.uk/blog/2010/06/29/ruby-code-for-converting-to-uk-ordnance-survey-coordinate-systems-from-wgs84/
 
-    def self.helmert_transform(system, target_system, ellipsoid_1, transform, ellipsoid_2)
-      phi = to_rad(system.lat)
-      lambda = to_rad(system.long)
-      alt = system.alt
+    def self.helmert_transform(source_system, target_system, ellipsoid_1, transform, ellipsoid_2)
+      phi = to_rad(source_system.lat)
+      lambda = to_rad(source_system.long)
+      h = source_system.alt
       
       a1 = ellipsoid_1[:a]
       b1 = ellipsoid_1[:b]
       
-      sin_phi = Math.sin(phi)
-      cos_phi = Math.cos(phi)
-      sin_lambda = Math.sin(lambda)
-      cos_lambda = Math.cos(lambda)
-      
+      # convert co-ordinates to 3D Cartesian. See:
+      # http://www.ordnancesurvey.co.uk/oswebsite/gps/docs/A_Guide_to_Coordinate_Systems_in_Great_Britain.pdf
       e_sq1 = eccentricity_squared(ellipsoid_1)
-      nu = a1 / Math.sqrt(1 - e_sq1 * sin_phi**2)
+      nu = a1 / Math.sqrt(1 - e_sq1 * Math.sin(phi)**2)
       
-      x1 = (nu + alt) * cos_phi * cos_lambda
-      y1 = (nu + alt) * cos_phi * sin_lambda
-      z1 = ((1 - e_sq1) * nu + alt) * sin_phi
+      x1 = (nu + h) * Math.cos(phi) * Math.cos(lambda)
+      y1 = (nu + h) * Math.cos(phi) * Math.sin(lambda)
+      z1 = ((1 - e_sq1) * nu + h) * Math.sin(phi)
       
+      # apply Helmert transformation
       tx = transform[:tx]
       ty = transform[:ty]
       tz = transform[:tz]
@@ -165,18 +163,19 @@ module Silva
       y2 = ty + x1 * rz + y1 * s1 - z1 * rx
       z2 = tz - x1 * ry + y1 * rx + z1 * s1
       
+      # convert 3D Cartesian co-ordinates back to lat, long, alt
       a2 = ellipsoid_2[:a]
       b2 = ellipsoid_2[:b]
       precision = 4 / a2
       
       e_sq2 = eccentricity_squared(ellipsoid_2)
-      p = Math.sqrt(x2 * x2 + y2 * y2)
+      p = Math.sqrt(x2**2 + y2**2)
       phi = Math.atan2(z2, p * (1 - e_sq2))
-      phi_p = 2 * Math::PI
+      phi_prime = 2 * Math::PI
       
-      while ((phi - phi_p).abs > precision) do
+      while ((phi - phi_prime).abs > precision) do
         nu = a2 / Math.sqrt(1 - e_sq2 * Math.sin(phi)**2)
-        phi_p = phi
+        phi_prime = phi
         phi = Math.atan2(z2 + e_sq2 * nu * Math.sin(phi), p)
       end
 
@@ -195,7 +194,7 @@ module Silva
     # Calculate M (meridional arc) given latitude and relevant ellipsoid
     def self.meridional_arc(phi, ellipsoid = AIRY1830)
       a, b = ellipsoid[:a], ellipsoid[:b]
-      n = self.n(ellipsoid)
+      n = n(ellipsoid)
 
       ma = (1 + n + (5.0 / 4.0) * n**2 + (5.0 / 4.0) * n**3) * (phi - PHI0)
       mb = (3 * n + 3 * n**2 + (21.0 / 8.0) * n**3) * Math.sin(phi - PHI0) *  Math.cos(phi + PHI0)
@@ -208,7 +207,7 @@ module Silva
     # Calculate nu, rho, eta2 (transverse and meridional radii) given latitude and relevant ellipsoid.
     def self.transverse_and_meridional_radii(phi, ellipsoid = AIRY1830)
       a, b = ellipsoid[:a], ellipsoid[:b]
-      e2 = self.eccentricity_squared(ellipsoid)
+      e2 = eccentricity_squared(ellipsoid)
 
       nu = a * F0 / Math.sqrt(1 - e2 * Math.sin(phi)**2)
       rho = a * F0 * (1 - e2) / ((1 - e2 * Math.sin(phi)**2)**1.5)
