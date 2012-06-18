@@ -26,8 +26,9 @@ class TestLocation < Test::Unit::TestCase
   def test_co_ordinates_set_correctly
     Silva::Test::DATA.each do |data|
       l = Silva::Location.from(:wgs84, data[:wgs84]).to(:wgs84)
-      assert(l.lat == data[:wgs84][:lat] && l.long == data[:wgs84][:long] && l.alt == data[:wgs84][:alt], \
-             "Failed assigning co-ords to System::Wgs84")
+      hash_data = { :lat => l.lat, :long => l.long }
+      hash_data[:alt] = l.alt if data[:wgs84][:alt]
+      assert_equal(data[:wgs84], hash_data)
     end
   end
 end

@@ -9,7 +9,8 @@ module Silva
     # @return [Silva::System] A valid location system.
     # @raises Silva::InvalidSystemError If the given system can't be created.
     def self.create(system_name, options)
-      return Silva::System.const_get(system_name.to_s.capitalize).new(options)
+      system = Silva::System.const_get(system_name.to_s.capitalize)
+      system.new(options)
     rescue NameError
       raise Silva::InvalidSystemError, "Can't create system: #{system_name}"
     end

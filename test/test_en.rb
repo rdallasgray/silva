@@ -1,4 +1,5 @@
 class TestEn < Test::Unit::TestCase
+
   def test_en_to_wgs84
     Silva::Test::DATA.each do |data|
       l = Silva::Location.from(:en, data[:en]).to(:wgs84)

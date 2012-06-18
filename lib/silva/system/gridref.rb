@@ -37,14 +37,13 @@ module Silva
         unless @gridref
           e100k = (easting / 100000).floor
           n100k = (northing / 100000).floor
-          
           index = n100k * OSGB_GRID_WIDTH + e100k
           prefix = OSGB_PREFIXES[index]
           
           e = ((easting % OSGB_GRID_SCALE) / (10**(5 - @digits / 2))).round
           n = ((northing % OSGB_GRID_SCALE) / (10**(5 - @digits / 2))).round
-          
-          @gridref = prefix + e.to_s.rjust(@digits / 2) + n.to_s.rjust(@digits / 2)
+
+          @gridref = prefix + e.to_s.rjust(@digits / 2, '0') + n.to_s.rjust(@digits / 2, '0')
         end
 
         @gridref
@@ -67,16 +66,21 @@ module Silva
 
       def to_en(options = nil)
         e100k, n100k = prefix_to_en
-        gridref.delete!(' ')
-        en = gridref[2..-1]
+        en = get_suffix
         e = en[0, (en.length / 2)].ljust(5, '5').to_i + e100k
         n = en[(en.length / 2)..-1].ljust(5, '5').to_i + n100k
 
         System.create(:en, :easting => e, :northing => n )
       end
 
-      def get_prefix
-        gridref[0..1]
+      def get_prefix(g = nil)
+        g ||= gridref
+        g[0..1]
+      end
+
+      def get_suffix(g = nil)
+        g ||= gridref
+        g[2..-1]
       end
 
       def prefix_to_en
@@ -91,8 +95,12 @@ module Silva
         [6, 8, 10].include?(digits)
       end
 
-      def validate_gridref(gridref)
-        gridref.match /[HJNOST][A-Z][0-9]{3,5}[0-9]{3,5}/
+      def validate_gridref(g)
+        OSGB_PREFIXES.include?(get_prefix(g)) && valid_suffix?(get_suffix(g))
+      end
+
+      def valid_suffix?(suffix)
+        suffix.length > 1 && suffix.length % 2 == 0 && suffix =~ /[0-9]+/
       end
 
       def params_satisfied?(options)
