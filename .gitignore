@@ -15,4 +15,5 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
-.#
+.#.emacs.desktop .emacs.desktop.lock
+TAGS
