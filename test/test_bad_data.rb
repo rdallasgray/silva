@@ -10,11 +10,6 @@ class TestBadData < Test::Unit::TestCase
     end
   end
 
-  def test_en_to_gridref
-    l = Silva::Location.from(:en, @data[:en])
-    puts l.to(:gridref)
-  end
-
   def test_gridref_to_en
     assert_raise Silva::InvalidParamValueError do
       l = Silva::Location.from(:gridref, @data[:gridref])

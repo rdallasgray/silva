@@ -1,10 +1,4 @@
 class TestWgs84 < Test::Unit::TestCase
-  def setup
-  end
-
-  def teardown
-  end
-
   def test_wgs84_to_en
     Silva::Test::DATA.each do |data|
       l = Silva::Location.from(:wgs84, data[:wgs84]).to(:en)

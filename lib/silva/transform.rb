@@ -42,6 +42,7 @@ module Silva
       helmert_transform(osgb36, :wgs84, AIRY1830, HELMERT_PARAMS.inject({}) { |h, (k, v)| h[k] = v * -1; h }, GRS80)
     end
 
+
     ##
     # Convert a :wgs84 co-ordinate system to :osgb36
     #
@@ -139,7 +140,6 @@ module Silva
       h = source_system.alt
       
       a1 = ellipsoid_1[:a]
-      b1 = ellipsoid_1[:b]
       
       # convert co-ordinates to 3D Cartesian. See:
       # http://www.ordnancesurvey.co.uk/oswebsite/gps/docs/A_Guide_to_Coordinate_Systems_in_Great_Britain.pdf
@@ -165,7 +165,6 @@ module Silva
       
       # convert 3D Cartesian co-ordinates back to lat, long, alt
       a2 = ellipsoid_2[:a]
-      b2 = ellipsoid_2[:b]
       precision = 4 / a2
       
       e_sq2 = eccentricity_squared(ellipsoid_2)
