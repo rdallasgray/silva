@@ -1,3 +1,5 @@
+require 'silva/system'
+
 module Silva
   ##
   # Encapsulates the hairy maths required to perform the various transforms.
@@ -23,7 +25,7 @@ module Silva
     LAMBDA0 = -2 * Math::PI / 180
 
     # Helmert transform parameters
-    HELMERT_PARAMS = { 
+    HELMERT_PARAMS = {
       :tx=> -446.448, :ty=> 125.157, :tz=> -542.060, # m
       :rx=> -0.1502, :ry=> -0.2470, :rz=> -0.8421, # sec
       :s=> 20.4894 # ppm
@@ -41,7 +43,6 @@ module Silva
     def self.osgb36_to_wgs84(osgb36)
       helmert_transform(osgb36, :wgs84, AIRY1830, HELMERT_PARAMS.inject({}) { |h, (k, v)| h[k] = v * -1; h }, GRS80)
     end
-
 
     ##
     # Convert a :wgs84 co-ordinate system to :osgb36
@@ -112,7 +113,7 @@ module Silva
 
       nu, rho, eta2 = transverse_and_meridional_radii(phi, ellipsoid)
       m = meridional_arc(phi, ellipsoid)
-      
+
       i = m + N0
       ii = (nu / 2) * Math.sin(phi) * Math.cos(phi)
       iii = (nu / 24) * Math.sin(phi) * Math.cos(phi)**3 * (5 - Math.tan(phi)**2 + 9 * eta2)
@@ -121,15 +122,15 @@ module Silva
       v = (nu / 6) * Math.cos(phi)**3 * (nu / rho - Math.tan(phi)**2)
       vi = (nu / 120) * Math.cos(phi)**5 * \
       (5 - 18 * Math.tan(phi)**2 + Math.tan(phi)**4 + 14 * eta2 - 58 * Math.tan(phi)**4 * eta2)
-      
+
       n = i + ii * (lambda - LAMBDA0)**2 + iii * (lambda - LAMBDA0)**4 + iiia * (lambda - LAMBDA0)**6
       e = E0 + iv * (lambda - LAMBDA0) + v * (lambda - LAMBDA0)**3 + vi * (lambda - LAMBDA0)**5
-      
+
       System.create(:en, :easting => e.round, :northing => n.round)
     end
 
     # Transform to/from :osgb36/:wgs84 co-ordinate systems.
-    # Algorithm from: 
+    # Algorithm from:
     # http://www.ordnancesurvey.co.uk/oswebsite/gps/information/coordinatesystemsinfo/guidecontents/guide6.html
     # Portions of code from:
     # http://www.harrywood.co.uk/blog/2010/06/29/ruby-code-for-converting-to-uk-ordnance-survey-coordinate-systems-from-wgs84/
@@ -138,40 +139,40 @@ module Silva
       phi = to_rad(source_system.lat)
       lambda = to_rad(source_system.long)
       h = source_system.alt
-      
+
       a1 = ellipsoid_1[:a]
-      
+
       # convert co-ordinates to 3D Cartesian. See:
       # http://www.ordnancesurvey.co.uk/oswebsite/gps/docs/A_Guide_to_Coordinate_Systems_in_Great_Britain.pdf
       e_sq1 = eccentricity_squared(ellipsoid_1)
       nu = a1 / Math.sqrt(1 - e_sq1 * Math.sin(phi)**2)
-      
+
       x1 = (nu + h) * Math.cos(phi) * Math.cos(lambda)
       y1 = (nu + h) * Math.cos(phi) * Math.sin(lambda)
       z1 = ((1 - e_sq1) * nu + h) * Math.sin(phi)
-      
+
       # apply Helmert transformation
       tx = transform[:tx]
       ty = transform[:ty]
       tz = transform[:tz]
-      rx = transform[:rx] / 3600 * Math::PI / 180 
+      rx = transform[:rx] / 3600 * Math::PI / 180
       ry = transform[:ry] / 3600 * Math::PI / 180
       rz = transform[:rz] / 3600 * Math::PI / 180
-      s1 = transform[:s] / 1e6 + 1 
-      
+      s1 = transform[:s] / 1e6 + 1
+
       x2 = tx + x1 * s1 - y1 * rz + z1 * ry
       y2 = ty + x1 * rz + y1 * s1 - z1 * rx
       z2 = tz - x1 * ry + y1 * rx + z1 * s1
-      
+
       # convert 3D Cartesian co-ordinates back to lat, long, alt
       a2 = ellipsoid_2[:a]
       precision = 4 / a2
-      
+
       e_sq2 = eccentricity_squared(ellipsoid_2)
       p = Math.sqrt(x2**2 + y2**2)
       phi = Math.atan2(z2, p * (1 - e_sq2))
       phi_prime = 2 * Math::PI
-      
+
       while ((phi - phi_prime).abs > precision) do
         nu = a2 / Math.sqrt(1 - e_sq2 * Math.sin(phi)**2)
         phi_prime = phi
@@ -180,7 +181,7 @@ module Silva
 
       lambda = Math.atan2(y2, x2)
       h = p / Math.cos(phi) - nu
-      
+
       System.create(target_system, :lat => to_deg(phi).round(DEGREE_ROUNDING_PLACES),\
                     :long => to_deg(lambda).round(DEGREE_ROUNDING_PLACES), :alt => h)
     end

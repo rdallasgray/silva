@@ -1,3 +1,5 @@
+require_relative '../test_helper'
+
 class TestGridref < Test::Unit::TestCase
   def test_gridref_no_digits
     Silva::Test::DATA.each do |data|
@@ -5,7 +7,7 @@ class TestGridref < Test::Unit::TestCase
       assert_equal(data[:gridref], l.to_s)
     end
   end
-  
+
   def test_gridref_to_en
     Silva::Test::DATA.each do |data|
       options = { :gridref => data[:gridref], :digits => 8 }

@@ -1,8 +1,12 @@
+require 'silva/system/base'
+require 'silva/system/osen'
+require 'silva/transform'
+
 module Silva
   module System
     ##
     # Location system representing Ordnance Survey Standard Grid References.
-    # 
+    #
     # Can be created given the options :easting => e, :northing => n or :gridref => g
     #
     class Gridref < Base
@@ -39,7 +43,7 @@ module Silva
           n100k = (northing / 100000).floor
           index = n100k * OSGB_GRID_WIDTH + e100k
           prefix = OSGB_PREFIXES[index]
-          
+
           e = ((easting % OSGB_GRID_SCALE) / (10**(5 - @digits / 2))).round
           n = ((northing % OSGB_GRID_SCALE) / (10**(5 - @digits / 2))).round
 

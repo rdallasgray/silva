@@ -1,3 +1,5 @@
+require 'silva/system'
+
 module Silva
   ##
   # A spoonful of syntactic sugar for creating location systems from the relevant parameters:
@@ -8,7 +10,7 @@ module Silva
   module Location
     ##
     # Create a location system from the given parameters.
-    # 
+    #
     # @param [Symbol] system_name The name of the system -- at present, :wgs84, :en, :osgb36 or :gridref.
     # @param [Hash] options Parameters relevant to the system (see individual systems for details).
     # @return [Silva::System] A new location system.

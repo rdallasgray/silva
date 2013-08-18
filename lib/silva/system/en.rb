@@ -1,3 +1,7 @@
+require 'silva/system/base'
+require 'silva/system/osen'
+require 'silva/transform'
+
 module Silva
   module System
     ##
@@ -9,8 +13,8 @@ module Silva
       def to_s
         [easting, northing].to_s
       end
-      
-      private 
+
+      private
 
       def to_osgb36(options = nil)
         Silva::Transform.en_to_osgb36(self)

@@ -1,6 +1,10 @@
 #!/usr/bin/env rake
 require "bundler/gem_tasks"
+require 'rake/testtask'
 
-task :test do
-  ruby "test/test_helper.rb"
+$:.unshift File.expand_path("../lib", __FILE__)
+require "silva/version"
+
+Rake::TestTask.new do |t|
+  t.pattern = 'test/silva/test_*.rb'
 end

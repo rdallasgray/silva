@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/silva/version', __FILE__)
+lib = File.expand_path('../lib/', __FILE__)
+$LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
+require 'silva/version'
 
 Gem::Specification.new do |gem|
   gem.authors       = ["Robert Dallas Gray"]
@@ -9,12 +11,10 @@ Gem::Specification.new do |gem|
   gem.homepage        = "http://github.com/rdallasgray/silva"
   gem.license         = "FreeBSD"
   gem.required_ruby_version      = ">= 1.9"
-  gem.add_development_dependency "test/unit"
+  gem.add_development_dependency "test-unit"
 
-
-  gem.files         = `git ls-files`.split($\)
-  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+  gem.files         = Dir.glob("lib/**/*") + %w{LICENSE.txt README.md Rakefile}
+  gem.test_files    = Dir.glob("test/**/*")
   gem.name          = "silva"
   gem.require_paths = ["lib"]
   gem.version       = Silva::VERSION

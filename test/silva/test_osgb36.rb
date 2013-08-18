@@ -1,3 +1,5 @@
+require_relative '../test_helper'
+
 class TestOsgb36 < Test::Unit::TestCase
   def test_osgb36_to_en
     Silva::Test::DATA.each do |data|

@@ -1,6 +1,8 @@
+require_relative '../test_helper'
+
 class TestLocation < Test::Unit::TestCase
   def test_invalid_system_raises_error
-    assert_raise Silva::InvalidSystemError do 
+    assert_raise Silva::InvalidSystemError do
       l = Silva::Location.from(:invalid, nil)
     end
   end

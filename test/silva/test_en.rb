@@ -1,3 +1,5 @@
+require_relative '../test_helper'
+
 class TestEn < Test::Unit::TestCase
 
   def test_en_to_wgs84

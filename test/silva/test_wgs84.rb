@@ -1,3 +1,5 @@
+require_relative '../test_helper'
+
 class TestWgs84 < Test::Unit::TestCase
   def test_wgs84_to_en
     Silva::Test::DATA.each do |data|
@@ -22,4 +24,3 @@ class TestWgs84 < Test::Unit::TestCase
     end
   end
 end
-

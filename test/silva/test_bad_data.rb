@@ -1,3 +1,5 @@
+require_relative '../test_helper'
+
 class TestBadData < Test::Unit::TestCase
   def setup
     @data = Silva::Test::DATA_BAD
@@ -16,4 +18,3 @@ class TestBadData < Test::Unit::TestCase
     end
   end
 end
-
