@@ -1,21 +1,24 @@
-# -*- encoding: utf-8 -*-
-lib = File.expand_path('../lib/', __FILE__)
-$LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
+# encoding: utf-8
+
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'silva/version'
 
-Gem::Specification.new do |gem|
-  gem.authors       = ["Robert Dallas Gray"]
-  gem.email         = ["mail@robertdallasgray.com"]
-  gem.summary         = "Convert between the GPS (WGS84) location standard and UK Ordnance Survey standards."
-  gem.description     = "Silva converts location data to and from WGS84, OSGB36, eastings/northings and standard OS grid references."
-  gem.homepage        = "http://github.com/rdallasgray/silva"
-  gem.license         = "FreeBSD"
-  gem.required_ruby_version      = ">= 1.9"
-  gem.add_development_dependency "test-unit"
+Gem::Specification.new do |spec|
+  spec.name          = 'silva'
+  spec.version       = Silva::VERSION
+  spec.authors       = ['Robert Dallas Gray']
+  spec.email         = ['mail@robertdallasgray.com']
+  spec.description   = %q{Convert between the GPS (WGS84) location standard and UK Ordnance Survey standards}
+  spec.summary       = %q{Silva converts location data to and from WGS84, OSGB36, eastings/northings and standard OS grid references.}
+  spec.homepage      = 'https://github.com/rdallasgray/silva.git'
+  spec.license       = 'FreeBSD'
 
-  gem.files         = Dir.glob("lib/**/*") + %w{LICENSE.txt README.md Rakefile}
-  gem.test_files    = Dir.glob("test/**/*")
-  gem.name          = "silva"
-  gem.require_paths = ["lib"]
-  gem.version       = Silva::VERSION
+  spec.files         = `git ls-files`.split($/)
+  spec.test_files    = spec.files.grep(/test\//)
+  spec.require_paths = ['lib']
+
+  spec.add_development_dependency 'bundler', '~> 1.3'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'test-unit'
 end
